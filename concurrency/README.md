@@ -4,11 +4,11 @@ Workers pool and jobs queue implementation to make http request and write it int
 
 ## Usages
 
-| No | Flag             | Descriptions                                   |
-|----|------------------|------------------------------------------------|
-| 1  | output           | directory for exported csv, default: "export/" |
-| 2  | concurrent_limit | number of workers, default: 2                  |
-| 3  | jobs             | job list, default: jobs.json                   |
+| No | Flag             | Descriptions                                    |
+|----|------------------|-------------------------------------------------|
+| 1  | output           | directory for exported csv, default: "exports/" |
+| 2  | concurrent_limit | number of workers, default: 2                   |
+| 3  | jobs             | job list, default: jobs.json                    |
 
 ### Example
 
@@ -49,7 +49,7 @@ you could create your own job list in json file. required fields are url and fil
         "filename": "export name.csv"
     },
 
-    ...
+    //...
 ]
 ```
 

@@ -18,7 +18,7 @@ func main() {
 		source      string
 	)
 
-	flag.StringVar(&outputDir, "output", "export", "directory for exported csv, default: \"export/\"")
+	flag.StringVar(&outputDir, "output", "exports", "directory for exported csv, default: \"exports/\"")
 	flag.IntVar(&totalWorker, "concurrent_limit", 2, "number of workers, default: 2")
 	flag.StringVar(&source, "jobs", "jobs.json", "job list, default: jobs.json")
 

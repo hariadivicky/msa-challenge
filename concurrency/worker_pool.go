@@ -5,6 +5,15 @@ import (
 	"sync"
 )
 
+// WorkerPool .
+type WorkerPool struct {
+	totalWorker int
+	Pool        chan chan Job
+	JobQueue    chan Job
+	Workers     []*Worker
+	Handler     JobHandler
+}
+
 // Job structure.
 type Job struct {
 	URL      string
@@ -15,63 +24,13 @@ type Job struct {
 // JobHandler defines job handler.
 type JobHandler func(job Job)
 
-// Worker .
+// Worker defines job executor.
 type Worker struct {
 	ID         int
 	Pool       chan chan Job
 	JobChannel chan Job
 	shutdown   chan bool
 	Handler    JobHandler
-}
-
-// NewWorker constructs a new worker.
-func NewWorker(id int, pool chan chan Job, jobHandler JobHandler) Worker {
-	return Worker{
-		ID:         id,
-		Pool:       pool,
-		JobChannel: make(chan Job),
-		shutdown:   make(chan bool),
-		Handler:    jobHandler,
-	}
-}
-
-// Listen starts worker and listening for jobs.
-func (w Worker) Listen() {
-	go func() {
-		log.Println("worker", w.ID, ": listening")
-		for {
-			// registers current job channel to pool
-			w.Pool <- w.JobChannel
-
-			select {
-			// receiving job
-			case job := <-w.JobChannel:
-				log.Println("worker", w.ID, ": receiving job", job)
-				w.Handler(job)
-				log.Println("worker", w.ID, ": was finished job", job)
-			case <-w.shutdown:
-				log.Println("worker", w.ID, ": stopped")
-				return
-			}
-		}
-	}()
-}
-
-// Close send shutdown signal to worker to stop working.
-func (w Worker) Close(wg *sync.WaitGroup) {
-	go func() {
-		w.shutdown <- true
-		wg.Done()
-	}()
-}
-
-// WorkerPool .
-type WorkerPool struct {
-	totalWorker int
-	Pool        chan chan Job
-	JobQueue    chan Job
-	Workers     []*Worker
-	Handler     JobHandler
 }
 
 // NewWorkerPool constructs a new workers pool.
@@ -125,4 +84,45 @@ func (wp *WorkerPool) Close() {
 	}
 
 	wg.Wait()
+}
+
+// NewWorker constructs a new worker.
+func NewWorker(id int, pool chan chan Job, jobHandler JobHandler) Worker {
+	return Worker{
+		ID:         id,
+		Pool:       pool,
+		JobChannel: make(chan Job),
+		shutdown:   make(chan bool),
+		Handler:    jobHandler,
+	}
+}
+
+// Listen starts worker and listening for jobs.
+func (w Worker) Listen() {
+	go func() {
+		log.Println("worker", w.ID, ": listening")
+		for {
+			// registers current job channel to pool
+			w.Pool <- w.JobChannel
+
+			select {
+			// receiving job
+			case job := <-w.JobChannel:
+				log.Println("worker", w.ID, ": receiving job", job)
+				w.Handler(job)
+				log.Println("worker", w.ID, ": was finished job", job)
+			case <-w.shutdown:
+				log.Println("worker", w.ID, ": stopped")
+				return
+			}
+		}
+	}()
+}
+
+// Close send shutdown signal to worker to stop working.
+func (w Worker) Close(wg *sync.WaitGroup) {
+	go func() {
+		w.shutdown <- true
+		wg.Done()
+	}()
 }

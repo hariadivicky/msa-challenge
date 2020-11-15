@@ -12,6 +12,7 @@ you can build this source using Makefile by typing `make build` command or build
 |---|---------|------------------------------------------------------|
 | 1 | output  | output file. if not set, default output is os.Stdout |
 | 2 | numbers | number list, separated with comma. e.g. 1,3,4,2,3    |
+| 3 | reverse | reverse list orders, default: false                  |
 
 ### Example
 

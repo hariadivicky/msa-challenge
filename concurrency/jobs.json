@@ -2,5 +2,9 @@
     {
         "url": "https://jsonplaceholder.typicode.com/albums",
         "filename": "albums.csv"
+    },
+    {
+        "url": "https://jsonplaceholder.typicode.com/albums",
+        "filename": "another-album.csv"
     }
 ]

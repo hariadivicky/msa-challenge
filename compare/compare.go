@@ -30,7 +30,6 @@ func NewDir(prefix string, path string) *Dir {
 // Compare directory contents.
 func Compare(source, target string) ([]string, error) {
 	var result []string
-	source, target = normalizePath(source, false), normalizePath(target, false)
 
 	// check source existence
 	sourceInfo, err := os.Stat(source)

@@ -36,18 +36,3 @@ func isMustSwap(isReverseMode bool, prev, current int) bool {
 
 	return prev > current
 }
-
-func same(array1, array2 []int) bool {
-	// compared array must having same length.
-	if len(array1) != len(array2) {
-		return false
-	}
-
-	for index, num := range array1 {
-		if num != array2[index] {
-			return false
-		}
-	}
-
-	return true
-}
